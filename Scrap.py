@@ -22,36 +22,52 @@ options.add_argument("--window-size=1920,1080")  # set window size to native GUI
 options.add_argument("start-maximized")
 driver = webdriver.Chrome(options=options)
 driver.get("https://tech.kiet.edu/team-erp/")
-driver.implicitly_wait(5)
+driver.implicitly_wait(9)
 
 
-
+linkedinArray = []
 try:
 
 
-  a = driver.find_element(by=By.XPATH,value="(//section)[2]/div/div/div")
-  actions = ActionChains(driver)
-  actions.move_to_element(a).perform()
-  time.sleep(3)
+
+  for i in range(2,3):
+    a = driver.find_elements(by=By.XPATH,value=f"(//section)[{i}]/div/div/div")
+    for item in a:
+      actions = ActionChains(driver)
+      actions.move_to_element(item).perform()
+      time.sleep(5)
 
  
 
-  batch = a.get_attribute("innerHTML")
+      batch = item.get_attribute("innerHTML")
 
   
-  soup = BeautifulSoup(batch, 'html.parser')
+      soup = BeautifulSoup(batch, 'html.parser')
 
-  link =soup.find('div',class_='flex justify-start items-center')
-  tag = link.find('a')
-#   for finnal in soup.find_all('a', href=True):
-  finalLink = tag['href']
-  driver.get(finalLink)
-  driver.implicitly_wait(5)
+      link =soup.find('div',class_='flex justify-start items-center')
+      tag = link.find('a')
+      finalLink = tag['href']
+ 
+      linkedinArray.append(finalLink)
+  print(linkedinArray)
 
-  b=driver.find_element(By.XPATH,"//*")
-  time.sleep(3)
+  for newItem in linkedinArray:
+     newLink =  driver.get(f"{newItem}")
 
-  print(b.text)
+
+  # driver.implicitly_wait(15)
+
+
+  # # send_keys("manuisgreat9@gmail.com")
+  # time.sleep(3)
+
+  # b=driver.find_element(By.XPATH,"//main/")
+  # loginsoup = BeautifulSoup(  b.get_attribute("innerHTML"), 'html.parser')
+
+  
+  
+  
+
   #<section class="w-screen lg:px-28 my-10">
 
 except TypeError as err:
