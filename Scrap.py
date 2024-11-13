@@ -1,7 +1,5 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 from selenium.webdriver.chrome.options import Options
@@ -33,29 +31,35 @@ try:
 
 
 
-  for i in range(2,4):
+  for i in range(2,3):
     a = driver.find_elements(by=By.XPATH,value=f"(//section)[{i}]/div/div/div")
     for item in a:
       actions = ActionChains(driver)
       actions.move_to_element(item).perform()
       time.sleep(5)
 
- 
 
-      batch = item.get_attribute("innerHTML")
+      try:
+         batch = item.get_attribute("innerHTML")
 
   
-      soup = BeautifulSoup(batch, 'html.parser')
+         soup = BeautifulSoup(batch, 'html.parser')
 
-      link =soup.find('div',class_='flex justify-start items-center')
-      tag = link.find('a')
-      finalLink = tag['href']
- 
-      linkedinArray.append(finalLink)
+         link =soup.find('div',class_='flex justify-start items-center')
+         tag = link.find('a')
+      finally:
+          batch = item.get_attribute("innerHTML")
+          soup = BeautifulSoup(batch, 'html.parser')
+          link =soup.find('div',class_='flex justify-start items-center')
+          tag = link.find('a')
+          finalLink = tag['href']
+          linkedinArray.append(finalLink)
+
+     
   print(linkedinArray)
 
-  newLink =  driver.get("https://www.linkedin.com/checkpoint/lg/sign-in-another-account")
-  driver.implicitly_wait(5)
+  newLink =  driver.get("https://www.linkedin.com/checkpoint/lg/sign-in-another-account/")
+  driver.implicitly_wait(15)
   username = driver.find_element(By.ID,"username")
   username.click()
   username.send_keys("sshivanshugupta11@gmail.com")
@@ -82,7 +86,7 @@ try:
      sectionExp = driver.find_element(By.ID,"experience")
      parentSectionExp = sectionExp.find_element(By.XPATH,"..")
      experience.append(parentSectionExp.text)
-  workbook = xlsxwriter.Workbook('complete.xlsx')
+  workbook = xlsxwriter.Workbook('complete2.xlsx')
   worksheet = workbook.add_worksheet()
   row = 0
   for i in linkedinArray:
